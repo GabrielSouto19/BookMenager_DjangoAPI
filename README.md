@@ -54,79 +54,97 @@ def adicionar_livro(request):
 
 ```
 
-### 2. Listar todas as tarefas
+### 2. Listar todas os livros
 
 ```python
 @csrf_exempt
-def listtasksview(request):
+@require_http_methods(["GET"])
+def listar_livros(request):
     if request.method == "GET":
-        tasklist = Task.objects.all().values()
-        return JsonResponse(list(tasklist), safe=False)
+        try:
+            livros = Book.objects.all().values()
+            return JsonResponse(list(livros),safe=False)
+        except Book.DoesNotExist:
+            return JsonResponse({"message":"Error Não foi possivel listar os livros"},status=404)
+
 ```
 
-### 3. Listar uma tarefa por ID
+### 3. Buscar livro pelo id 
 
 ```python
 @csrf_exempt
-def listtaskid(request, id):
-    try:
-        tasklist = Task.objects.get(id=id)
-        tarefa = {
-            "id": tasklist.id,
-            "title": tasklist.title,
-            "description": tasklist.description,
-            "completed": tasklist.completed,
-        }
-        return JsonResponse(tarefa)
-    except Task.DoesNotExist:
-        return JsonResponse({"message": "Task não encontrada"})
+@require_http_methods(["GET"])
+def obter_livro(request,id):
+    if request.method == "GET":
+        try:
+            livros = Book.objects.get(id=id)
+            dados = {
+                "titulo":livros.titulo,
+                "autor":livros.autor,
+                "data_publicacao":livros.data_publicacao,
+                "numero_paginas":livros.numero_paginas,
+            }
+            return JsonResponse(dados)
+        except Book.DoesNotExist:
+            return JsonResponse({"message":"Error Não foi Encontrar o livro"},status=404)
+
 ```
 
-### 4. Atualizar uma tarefa
+### 4. Atualizar livro
 
 ```python
+
 @csrf_exempt
-def updatetaskview(request, id):
+@require_http_methods(["PUT"])
+def atualizar_livro(request,id):
     if request.method == "PUT":
         try:
-            task = Task.objects.get(id=id)
+            livro = Book.objects.get(id=id)
             dados = json.loads(request.body)
-            task.title = dados.get("title", task.title)
-            task.description = dados.get("description", task.description)
-            task.completed = dados.get("completed", task.completed)
-            task.save()
-            return JsonResponse({"message": "Task atualizada com sucesso"})
-        except Task.DoesNotExist:
-            return JsonResponse({"error": "Task não encontrada"}, status=404)
+            livro.titulo = dados.get("titulo",livro.titulo)
+            livro.autor = dados.get("autor",livro.autor)
+            livro.data_publicacao = dados.get("data_publicacao",livro.data_publicacao)
+            livro.numero_paginas = dados.get("numero_paginas",livro.numero_paginas)
+            livro.save()
+            return JsonResponse({"message":"livro atualizado com sucesso"})
+        
+        except Book.DoesNotExist:
+            return JsonResponse({"message":"Erros livro não encontrado"})
+
+    return JsonResponse({"message":"erro , não foi possivel atualizar o livro"},status=404)
+
 ```
 
-### 5. Deletar uma tarefa
+### 5. Deletar livro
 
 ```python
 @csrf_exempt
-def deletetask(request, id):
-    if request.method == "DELETE":
-        try:
-            task = Task.objects.get(id=id)
-            task.delete()
-            return JsonResponse({"message": "Task deletada com sucesso"})
-        except Task.DoesNotExist:
-            return JsonResponse({"message": "Task não encontrada"}, status=404)
+@require_http_methods(["DELETE"])
+def deletar_livro(request,id):
+    try:
+        livro = Book.objects.get(id=id)
+        livro.delete()
+        return JsonResponse({"message":"Livro deletado com sucesso"})
+    except Book.DoesNotExist:
+        return JsonResponse({"message":"erro não foi possivel deletar este livro ,livro não encontrado"})
+
+
 ```
 
 ## Endpoints
 
-### Criar uma tarefa
+### Adicionar Livro
 
-- **URL**: `/createtask/`
+- **URL**: `/adicionar_livro/`
 - **Método**: `POST`
 - **Body**:
 
 ```json
 {
-  "title": "Minha Tarefa",
-  "description": "Descrição da tarefa",
-  "completed": false
+  "titulo": "titulo do meu livro",
+  "autor": "autor do meu livro",
+  "data_publicacao": "yyyy-mm-dd",
+  "numero_paginas": "xx"
 }
 ```
 
@@ -135,30 +153,32 @@ def deletetask(request, id):
 ```json
 {
   "id": 1,
-  "message": "Task adicionada com sucesso"
+  "message": "Livro adicionada com sucesso"
 }
 ```
 
 ### Listar todas as tarefas
 
-- **URL**: `/listtask/`
+- **URL**: `/listar_livro/`
 - **Método**: `GET`
 - **Resposta**:
 
 ```json
 [
-  {
-    "id": 1,
-    "title": "Minha Tarefa",
-    "description": "Descrição da tarefa",
-    "completed": false
-  },
-  {
-    "id": 2,
-    "title": "Outra Tarefa",
-    "description": "Outra descrição",
-    "completed": true
-  }
+    {
+    "id":0,
+    "titulo": "titulo do meu livro",
+    "autor": "autor do meu livro",
+    "data_publicacao": "yyyy-mm-dd",
+    "numero_paginas": "xx"
+    },
+    {
+    "id":0,
+    "titulo": "titulo do meu livro",
+    "autor": "autor do meu livro",
+    "data_publicacao": "yyyy-mm-dd",
+    "numero_paginas": "xx"
+    }
 ]
 ```
 

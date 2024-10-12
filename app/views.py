@@ -30,7 +30,7 @@ def obter_livro(request,id):
             }
             return JsonResponse(dados)
         except Book.DoesNotExist:
-            return JsonResponse({"message":"Error Não foi possivel listar os livros"},status=404)
+            return JsonResponse({"message":"Error Não foi possivel encontrar o livro"},status=404)
 
 
 
