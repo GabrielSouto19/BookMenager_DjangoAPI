@@ -182,52 +182,54 @@ def deletar_livro(request,id):
 ]
 ```
 
-### Listar uma tarefa por ID
+### Obter um livro pelo id 
 
-- **URL**: `/task/<int:id>/`
+- **URL**: `/livro/<int:id>/`
 - **Método**: `GET`
 - **Resposta**:
 
 ```json
 {
-  "id": 1,
-  "title": "Minha Tarefa",
-  "description": "Descrição da tarefa",
-  "completed": false
-}
+    "id":x,
+    "titulo": "titulo do meu livro",
+    "autor": "autor do meu livro",
+    "data_publicacao": "yyyy-mm-dd",
+    "numero_paginas": "xx"
+    }
 ```
 
 ### Atualizar uma tarefa
 
-- **URL**: `/updatetask/<int:id>/`
+- **URL**: `/atualizar_livro/<int:id>/`
 - **Método**: `PUT`
 - **Body**:
 
 ```json
 {
-  "title": "Tarefa Atualizada",
-  "description": "Nova descrição",
-  "completed": true
-}
+    "titulo": "Novo titulo do meu livro",
+    "autor": "Novo autor do meu livro",
+    "data_publicacao": "yyyy-mm-dd",
+    "numero_paginas": "xx"
+    }
 ```
 
 - **Resposta**:
 
 ```json
 {
-  "message": "Task atualizada com sucesso"
+  "message": "Livro atualizado com sucesso"
 }
 ```
 
 ### Deletar uma tarefa
 
-- **URL**: `/deletetask/<int:id>/`
+- **URL**: `/deletar_livro/<int:id>/`
 - **Método**: `DELETE`
 - **Resposta**:
 
 ```json
 {
-  "message": "Task deletada com sucesso"
+  "message": "Livro deletado com sucesso"
 }
 ```
 
@@ -236,7 +238,7 @@ def deletar_livro(request,id):
 1. Clone o repositório:
 
 ```bash
-git clone https://github.com/seu-usuario/TasklistDjango.git
+git clone https://github.com/GabrielSouto19/BookMenager_DjangoAPI.git
 ```
 # ATENÇÃO PARA CRIAÇÃO DOS AMBIENTES VIRTUAIS, SIGA O PASSO DE UM OU OUTRO !
 2 Crie um ambiente virtual (WINDOWS):
