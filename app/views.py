@@ -16,6 +16,24 @@ def listar_livros(request):
         except Book.DoesNotExist:
             return JsonResponse({"message":"Error Não foi possivel listar os livros"},status=404)
 
+@csrf_exempt
+@require_http_methods(["GET"])
+def obter_livro(request,id):
+    if request.method == "GET":
+        try:
+            livros = Book.objects.get(id=id)
+            dados = {
+                "titulo":livros.titulo,
+                "autor":livros.autor,
+                "data_publicacao":livros.data_publicacao,
+                "numero_paginas":livros.numero_paginas,
+            }
+            return JsonResponse(dados)
+        except Book.DoesNotExist:
+            return JsonResponse({"message":"Error Não foi possivel listar os livros"},status=404)
+
+
+
 
 @csrf_exempt
 @require_http_methods(["POST"])
